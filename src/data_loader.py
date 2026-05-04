@@ -3,7 +3,7 @@ import pandas as pd
 import os
 from config.settings import TICKERS, START_DATE, END_DATE
 
-OUTPUT_PATH = "data/raw_data.csv"
+OUTPUT_PATH = "data/raw/raw_data.csv"
 
 def fetch_data():
     all_data = []
