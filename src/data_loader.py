@@ -2,6 +2,12 @@ import yfinance as yf
 import pandas as pd
 from config.settings import TICKERS, START_DATE, END_DATE
 import os
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 OUTPUT_PATH = "data/raw/raw_data.csv"
 
@@ -9,7 +15,7 @@ def fetch_data():
     all_data = []
 
     for ticker in TICKERS:
-        print(f"[INFO] Fetching {ticker}")
+        logging.info(f"Fetching {ticker}")
 
         try:
             df = yf.download(
@@ -22,7 +28,7 @@ def fetch_data():
             print(df.columns)
 
             if df.empty:
-                print(f"[WARNING] No data for {ticker}")
+                logging.warning(f"No data for {ticker}")
                 continue
 
             if isinstance(df.columns, pd.MultiIndex):
@@ -37,7 +43,7 @@ def fetch_data():
             all_data.append(df)
 
         except Exception as e:
-            print(f"[ERROR] {ticker}: {e}")
+            logging.error(f"{ticker}: {e}")
 
     final_df = pd.concat(all_data, ignore_index=True)
 
