@@ -54,11 +54,19 @@ Implemented machine learning feature engineering pipeline for financial time-ser
 ## Current Data Pipeline
 
 raw_data.csv
-    ↓
+
+        ↓
+
 validated_data.csv
-    ↓
+
+        ↓
+
 basic_features.csv
-    ↓
+
+        ↓
+
 technical_features.csv
-    ↓
+
+        ↓
+
 enhanced_features.csv
