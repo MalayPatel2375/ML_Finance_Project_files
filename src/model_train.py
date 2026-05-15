@@ -13,6 +13,7 @@ from sklearn.metrics import (
 )
 
 df = pd.read_csv("data/model_input/model_ready_data.csv")
+df = df.drop(columns=["Unnamed: 0"])
 
 #print(df.shape)
 #print(df.head())
