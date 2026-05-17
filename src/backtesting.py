@@ -41,7 +41,7 @@ print("Min Probability: ", up_probabilities.min())
 print("Mean Probability: ", up_probabilities.mean())
 print("\n")
 
-signals = np.where(up_probabilities > 0.51, 1, 0) #threshhold tuned from 0.55 to 0.51
+signals = np.where(up_probabilities > 0.50, 1, 0) #threshhold tuned from 0.55 to 0.51
 
 test_df = df.iloc[split_index:].copy()
 
@@ -50,6 +50,8 @@ test_df["Strategy_Signal"] = signals
 test_df["Market_Return"] = test_df["Daily_Return"]
 
 test_df["Strategy_Return"] = (test_df["Strategy_Signal"] * test_df["Market_Return"])
+
+test_df["Probability_Up"] = up_probabilities
 
 avg_market_return = test_df["Market_Return"].mean()
 
