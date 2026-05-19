@@ -491,3 +491,145 @@ into:
 This stage provided one of the most realistic lessons of the project so far:
 
 > Financial prediction quality and financial profitability are not the same problem.
+
+## Week 2 — Day 8  
+
+## Strategy Visualization & Financial Diagnostics
+
+This phase focused on visualizing strategy behavior and evaluating financial performance beyond traditional ML accuracy metrics.
+
+The project moved from:
+
+- simple prediction evaluation
+
+to:
+
+- financial strategy diagnostics
+- risk analysis
+- probability behavior analysis
+
+---
+
+## Objectives
+
+Implemented:
+
+- Equity curve visualization
+- Market vs strategy comparison
+- Probability distribution analysis
+- Trading signal visualization
+- Drawdown analysis
+- Sharpe Ratio evaluation
+
+---
+
+## Equity Curve Analysis
+
+Cumulative returns were generated using:
+
+```
+df["Cumulative_Market"] = (
+    1 + df["Market_Return"]
+).cumprod()
+
+df["Cumulative_Strategy"] = (
+    1 + df["Strategy_Return"]
+).cumprod()
+```
+
+This allowed visualization of:
+
+- strategy growth
+- market comparison
+- long-term performance behavior
+
+---
+
+## Probability Distribution Insights
+
+Prediction probabilities from:
+
+```
+model.predict_proba()
+```
+
+were visualized using histograms.
+
+Key finding:
+
+- most probabilities clustered near 0.50
+- confidence separation was weak
+- threshold filtering provided limited advantage
+
+This introduced the concept of:
+
+## Probability Calibration
+
+Higher confidence did not necessarily produce better financial predictions.
+
+---
+
+## Drawdown Analysis
+
+Drawdown measures:
+
+- decline from previous portfolio peak
+
+Calculated using:
+
+```
+rolling_max = (
+    df["Cumulative_Strategy"]
+    .cummax()
+)
+
+drawdown = (
+    df["Cumulative_Strategy"]
+    - rolling_max
+) / rolling_max
+```
+
+This helped evaluate:
+
+- strategy stability
+- crash severity
+- financial risk exposure
+
+---
+
+## Sharpe Ratio
+
+Implemented a basic Sharpe Ratio to evaluate:
+
+- return relative to risk
+
+```
+sharpe = (
+    df["Strategy_Return"].mean()
+    /
+    df["Strategy_Return"].std()
+) * np.sqrt(252)
+```
+
+---
+
+## Key Concepts Learned
+
+- Equity curve analysis
+- Financial visualization
+- Strategy diagnostics
+- Drawdown analysis
+- Sharpe Ratio
+- Probability calibration
+- Risk-adjusted evaluation
+
+---
+
+## Major Takeaways
+
+- Accuracy alone is not enough in financial ML
+- Visualization reveals problems hidden by metrics
+- Higher confidence predictions were not necessarily better
+- Risk analysis is essential for evaluating trading systems
+
+This phase pushed the project closer to a real quantitative research workflow instead of a basic ML classification project.

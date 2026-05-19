@@ -42,7 +42,7 @@ future_cols = [
 
 #print(f"\nTarget Distribution: {df["Target"].value_counts(normalize=True)}")
 
-model_df = df.drop(columns=["Date", "Ticker"])
+model_df = df.drop(columns=["Ticker"])
 
 model_df.to_csv("data/model_input/model_ready_data.csv", index=False)
 #print("\nModel-ready dataset saved successfully.")
