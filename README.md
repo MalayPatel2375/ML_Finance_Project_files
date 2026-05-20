@@ -633,3 +633,602 @@ sharpe = (
 - Risk analysis is essential for evaluating trading systems
 
 This phase pushed the project closer to a real quantitative research workflow instead of a basic ML classification project.
+
+# WEEK 3 — DAYS 1 TO 3  
+# Time-Series Validation, XGBoost & Hyperparameter Tuning
+
+This phase focused on transforming the project from a basic machine learning workflow into a more realistic quantitative finance research pipeline.
+
+The major focus areas included:
+- eliminating data leakage
+- implementing time-aware validation
+- experimenting with advanced ensemble learning
+- detecting overfitting
+- understanding model generalization
+
+---
+
+# DAY 1 — TIME-SERIES VALIDATION
+
+## Objective
+
+Replace random train/test splitting with:
+- chronological validation
+- future-aware evaluation
+- realistic forecasting structure
+
+---
+
+# Problem Discovered
+
+The original ML workflow used:
+```python
+train_test_split()
+```
+
+This caused:
+- random shuffling of financial data
+- future information leaking into training
+- unrealistic model evaluation
+
+This is extremely dangerous in:
+- finance
+- forecasting systems
+- time-series modeling
+
+---
+
+# Major Dataset Issue
+
+During implementation:
+```text
+Date column was missing from model_ready_data.csv
+```
+
+Without timestamps:
+- chronological splitting becomes impossible
+- realistic backtesting breaks
+- temporal validation cannot be performed
+
+---
+
+# Root Cause
+
+The `Date` column was accidentally dropped during preprocessing while selecting model features.
+
+Likely caused by:
+```python
+drop(columns=["Date"])
+```
+
+or numeric-only filtering.
+
+---
+
+# Solution
+
+Rebuilt the dataset pipeline so that:
+- Date remains in dataframe
+- Ticker remains in dataframe
+- only ML features are removed during training
+
+Final structure:
+```python
+[
+    "Date",
+    "Ticker",
+    feature columns,
+    "Target"
+]
+```
+
+---
+
+# Additional Dataset Error
+
+Unexpected column:
+```text
+Unnamed: 0
+```
+
+appeared in dataset.
+
+---
+
+# Root Cause
+
+CSV index was accidentally saved:
+```python
+df.to_csv("file.csv")
+```
+
+instead of:
+```python
+df.to_csv("file.csv", index=False)
+```
+
+---
+
+# Solution
+
+Removed accidental index columns using:
+```python
+df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
+```
+
+and ensured:
+```python
+index=False
+```
+
+for all future exports.
+
+---
+
+# Time-Series Validation Pipeline
+
+Implemented:
+- chronological sorting
+- position-based slicing
+- past-to-future validation
+
+Key implementation:
+```python
+df = df.sort_values("Date")
+```
+
+and:
+```python
+split_index = int(len(df) * 0.8)
+```
+
+Training:
+- first 80%
+
+Testing:
+- last 20%
+
+---
+
+# Major Concepts Learned
+
+## Data Leakage
+
+Future information accidentally enters training data and inflates performance.
+
+---
+
+## Temporal Validation
+
+Validation must respect:
+```text
+time sequence
+```
+
+especially in:
+- finance
+- forecasting
+- economic systems
+
+---
+
+## Production Thinking
+
+Real systems:
+- train on history
+- predict unseen future
+
+not:
+```text
+random shuffled reality
+```
+
+---
+
+# Day 1 Results
+
+## Accuracy
+```text
+52.99%
+```
+
+---
+
+# Major Observation
+
+The model heavily favored:
+```text
+bullish predictions
+```
+
+Meaning:
+- strong UP prediction behavior
+- weak bearish understanding
+
+---
+
+# Important Insight
+
+Even after removing leakage:
+- accuracy remained near ~53%
+
+This suggested:
+```text
+market signal is weak and noisy
+```
+
+which is realistic in financial prediction systems.
+
+---
+
+# DAY 2 — XGBOOST MODEL
+
+## Objective
+
+Move from:
+- linear learning
+- simple ensembles
+
+to:
+```text
+boosted nonlinear learning
+```
+
+using:
+```text
+XGBoost
+```
+
+---
+
+# Why XGBoost Matters
+
+XGBoost is heavily used in:
+- finance
+- Kaggle competitions
+- fraud detection
+- production ML systems
+
+because it captures:
+- nonlinear relationships
+- sequential learning behavior
+- boosting-based optimization
+
+---
+
+# XGBoost Architecture
+
+Unlike Random Forest:
+- trees are not independent
+
+Instead:
+- each tree learns from previous errors
+
+This creates:
+```text
+sequential boosted learning
+```
+
+---
+
+# XGBoost Results
+
+## Accuracy
+```text
+51.73%
+```
+
+Lower than:
+- Logistic Regression
+- Random Forest
+
+---
+
+# Major Insight
+
+More advanced models:
+```text
+do NOT guarantee better financial prediction
+```
+
+This is one of the biggest lessons in quantitative finance.
+
+---
+
+# Important Behavioral Difference
+
+XGBoost:
+- improved bearish prediction capability
+- reduced bullish prediction dominance
+
+Example:
+```text
+Correct bearish predictions increased significantly
+```
+
+Meaning:
+```text
+XGBoost learned more balanced directional behavior
+```
+
+---
+
+# Feature Importance Analysis
+
+Top features included:
+- Daily_Return
+- Return_Lag2
+- RSI_14
+- Momentum_5
+- SMA features
+
+---
+
+# Major Insight
+
+The model relied mostly on:
+```text
+short-term momentum behavior
+```
+
+instead of:
+- fundamentals
+- macroeconomics
+- valuation metrics
+
+---
+
+# Another Important Observation
+
+Volume importance decreased compared to Random Forest.
+
+This suggested:
+```text
+price-action features mattered more than volume behavior
+```
+
+for this specific dataset.
+
+---
+
+# Major Concepts Learned
+
+## Boosting
+
+Sequential learning where new trees attempt to correct prior mistakes.
+
+---
+
+## Feature Importance
+
+Understanding:
+```text
+what actually drives model predictions
+```
+
+---
+
+## Nonlinear Learning
+
+XGBoost can capture:
+- complex interactions
+- nonlinear relationships
+- feature combinations
+
+better than linear models.
+
+---
+
+# DAY 3 — HYPERPARAMETER TUNING
+
+## Objective
+
+Systematically optimize:
+- model complexity
+- learning behavior
+- generalization ability
+
+while controlling:
+```text
+overfitting
+```
+
+---
+
+# Hyperparameters Tested
+
+| Trees | Depth | Learning Rate |
+|---|---|---|
+| 50 | 2 | 0.01 |
+| 100 | 4 | 0.05 |
+| 200 | 6 | 0.10 |
+| 300 | 8 | 0.20 |
+
+---
+
+# Major Discovery
+
+As model complexity increased:
+- training accuracy exploded
+- testing accuracy declined
+
+This demonstrated:
+```text
+classic financial overfitting
+```
+
+---
+
+# Final Results Summary
+
+| Complexity | Train Accuracy | Test Accuracy |
+|---|---|---|
+| Simple | 52.5% | 53.5% |
+| Medium | 56.2% | 51.7% |
+| Large | 73.6% | 50.9% |
+| Extreme | 98.1% | 50.8% |
+
+---
+
+# Biggest Lesson
+
+The simplest model:
+```text
+generalized best
+```
+
+while complex models:
+```text
+memorized noise
+```
+
+---
+
+# Extreme Overfitting Example
+
+Model:
+```text
+300 trees
+depth 8
+learning rate 0.20
+```
+
+achieved:
+```text
+98% training accuracy
+```
+
+but failed on future data.
+
+---
+
+# Why This Happened
+
+Financial markets contain:
+- randomness
+- unstable patterns
+- regime shifts
+- noisy behavior
+
+Complex models learned:
+```text
+historical noise
+```
+
+instead of:
+```text
+true predictive structure
+```
+
+---
+
+# Major Concepts Learned
+
+## Overfitting
+
+Model memorizes training noise and fails on unseen data.
+
+---
+
+## Generalization
+
+Goal is NOT:
+```text
+high training accuracy
+```
+
+Goal is:
+```text
+stable future performance
+```
+
+---
+
+## Bias-Variance Tradeoff
+
+Increasing complexity:
+- reduces bias
+- increases variance
+- raises overfitting risk
+
+---
+
+## Financial ML Reality
+
+Finance ML is largely:
+```text
+an overfitting management problem
+```
+
+not:
+```text
+an accuracy maximization problem
+```
+
+---
+
+# Biggest Week 3 Lessons So Far
+
+## 1. Time-aware validation is mandatory
+
+Random splitting creates:
+```text
+fake financial performance
+```
+
+---
+
+## 2. More complexity is not always better
+
+Advanced models can:
+```text
+overfit extremely quickly
+```
+
+in financial systems.
+
+---
+
+## 3. Simpler models often generalize better
+
+Especially when:
+```text
+true market signal is weak
+```
+
+---
+
+## 4. Accuracy alone is misleading
+
+Important factors include:
+- directional balance
+- robustness
+- stability
+- overfitting control
+- future generalization
+
+---
+
+# Current Project Evolution
+
+The project has now evolved from:
+```text
+basic ML experimentation
+```
+
+toward:
+```text
+quantitative research workflow thinking
+```
+
+The system now includes:
+- time-series validation
+- boosted ensemble learning
+- feature importance analysis
+- overfitting diagnostics
+- realistic financial evaluation structure
+
+This represents a major step toward:
+- production-aware ML
+- quantitative finance engineering
+- real-world forecasting system design
