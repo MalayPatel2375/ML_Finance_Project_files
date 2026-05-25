@@ -1232,3 +1232,420 @@ This represents a major step toward:
 - production-aware ML
 - quantitative finance engineering
 - real-world forecasting system design
+
+# Week 3 — Day 4 to Day 7  
+# Advanced Model Evaluation, Calibration, Explainability & Regime Analysis
+
+---
+
+# Day 4 — Time-Series Cross Validation
+
+## Objective
+Evaluate model stability across multiple time periods instead of relying on a single train-test split.
+
+---
+
+## Concepts Learned
+- TimeSeriesSplit
+- Sequential validation
+- Temporal generalization
+- Market regime dependency
+- Model stability analysis
+
+---
+
+## Key Implementation
+
+### Time-Series Cross Validation
+```python
+from sklearn.model_selection import TimeSeriesSplit
+
+tscv = TimeSeriesSplit(n_splits=5)
+```
+
+### Fold-Based Training
+```python
+for train_index, test_index in tscv.split(X):
+```
+
+### Accuracy Tracking
+```python
+scores.append(accuracy)
+```
+
+### Final Evaluation
+```python
+average_score = np.mean(scores)
+std_score = np.std(scores)
+```
+
+---
+
+## Key Results
+
+| Fold | Accuracy |
+|---|---|
+| 1 | 0.4987 |
+| 2 | 0.5328 |
+| 3 | 0.5423 |
+| 4 | 0.4845 |
+| 5 | 0.5413 |
+
+### Final Metrics
+- Average Accuracy: ~52%
+- Standard Deviation: ~0.024
+
+---
+
+## Major Lessons
+- Financial model performance changes across time periods.
+- Different market conditions create different prediction behavior.
+- Some market regimes completely weaken predictive power.
+- Cross-validation exposed instability hidden in single train-test splits.
+
+---
+
+## Important Insight
+The project shifted from:
+
+> "How accurate is the model?"
+
+to:
+
+> "When does the model fail?"
+
+---
+
+# Day 5 — Probability Calibration & Confidence Analysis
+
+## Objective
+Analyze prediction confidence instead of only binary predictions.
+
+---
+
+## Concepts Learned
+- Probability outputs
+- Confidence thresholds
+- Calibration analysis
+- Conviction strength
+- Prediction uncertainty
+
+---
+
+## Key Implementation
+
+### Probability Predictions
+```python
+probabilities = model.predict_proba(X_test_scaled)
+```
+
+### Extract Bullish Probability
+```python
+up_probability = probabilities[:, 1]
+```
+
+### Manual Threshold Predictions
+```python
+predictions = (up_probability >= 0.50).astype(int)
+```
+
+### Confidence Calculation
+```python
+results_df["Confidence"] = np.where(
+    results_df["Up_Probability"] >= 0.5,
+    results_df["Up_Probability"],
+    1 - results_df["Up_Probability"]
+)
+```
+
+---
+
+## Threshold Testing
+
+| Threshold | Result |
+|---|---|
+| 0.50 | Trades found |
+| 0.60 | No trades |
+| 0.70 | No trades |
+| 0.80 | No trades |
+
+---
+
+## Major Discovery
+The model probabilities were concentrated near:
+
+> 0.50
+
+This revealed:
+- weak confidence
+- weak signal separation
+- limited conviction
+- compressed probability outputs
+
+---
+
+## Important Lesson
+The absence of high-confidence trades was itself a valuable insight.
+
+The model was essentially saying:
+
+> "I am slightly confident, but not strongly confident."
+
+---
+
+# Day 6 — SHAP Explainability Analysis
+
+## Objective
+Understand WHY the model makes predictions.
+
+---
+
+## Concepts Learned
+- SHAP values
+- Explainable AI (XAI)
+- Global feature importance
+- Local prediction explanations
+- Feature contribution analysis
+
+---
+
+## Key Implementation
+
+### Create SHAP Explainer
+```python
+explainer = shap.Explainer(model)
+```
+
+### Generate SHAP Values
+```python
+shap_values = explainer(X_test_scaled)
+```
+
+### Global Feature Importance
+```python
+importance_df = pd.DataFrame({
+    "Feature": X.columns,
+    "Mean_shap_value": np.abs(shap_values.values).mean(axis=0)
+})
+```
+
+### Local Prediction Analysis
+```python
+local_df = pd.DataFrame({
+    "Feature": X.columns,
+    "SHAP_contribution": local_values
+})
+```
+
+---
+
+## Key Findings
+
+### Most Important Features
+- Daily_Return
+- Return_Lag1/2/3
+- RSI_14
+- Momentum-based indicators
+
+### Weak / Ignored Features
+- Open
+- High
+- Low
+- Volume
+
+---
+
+## Major Insight
+The model learned:
+
+> short-term momentum behavior
+
+instead of:
+
+> raw price-level behavior
+
+---
+
+## Important Discovery
+Engineered features were significantly more useful than raw OHLC data.
+
+This confirmed:
+- momentum dominance
+- weak raw-price signal
+- importance of feature engineering
+
+---
+
+# Day 7 — Market Regime Analysis
+
+## Objective
+Evaluate model behavior across different market conditions.
+
+---
+
+## Concepts Learned
+- Market regimes
+- Volatility segmentation
+- Bullish vs bearish conditions
+- Environment-aware ML
+- Conditional model evaluation
+
+---
+
+# Volatility Regime Analysis
+
+## Regime Logic
+```python
+df["Volatility_Regime"] = np.where(
+    df["Volatility_5"] >= volatility_threshold,
+    "High_volatility",
+    "Low_volatility"
+)
+```
+
+---
+
+## Results
+
+| Regime | Accuracy |
+|---|---|
+| Low Volatility | 53.32% |
+| High Volatility | 53.79% |
+
+---
+
+## Insight
+The model performed similarly across volatility conditions.
+
+This suggested:
+- moderate robustness
+- limited volatility sensitivity
+- stable but weak predictive edge
+
+---
+
+# Trend Regime Analysis
+
+## Initial Problem
+Original logic:
+```python
+>= 1
+```
+
+incorrectly classified the entire dataset as bearish.
+
+---
+
+## Root Cause
+`Price_VS_SMA20` was centered near:
+
+> 0
+
+instead of:
+
+> 1
+
+because the feature represented:
+
+> difference
+
+rather than:
+
+> ratio
+
+---
+
+## Corrected Logic
+```python
+df["Trend_Regime"] = np.where(
+    df["Price_VS_SMA20"] >= 0,
+    "Bullish",
+    "Bearish"
+)
+```
+
+---
+
+## Final Results
+
+| Regime | Accuracy |
+|---|---|
+| Bullish | 53.29% |
+| Bearish | 54.02% |
+
+---
+
+## Major Insight
+The model performed slightly better during bearish markets.
+
+Possible reasons:
+- sharper downside momentum
+- stronger bearish volatility
+- more detectable downward movement patterns
+
+---
+
+# Biggest Week 3 Lessons
+
+## 1. Financial Signals Are Weak
+Most predictions remain close to:
+
+> 50% confidence
+
+---
+
+## 2. Model Stability Matters More Than Raw Accuracy
+Higher complexity caused:
+- severe overfitting
+- unstable generalization
+- weak robustness
+
+---
+
+## 3. Feature Engineering Is Critical
+Engineered momentum features significantly outperformed raw price features.
+
+---
+
+## 4. Explainability Changed Model Understanding
+SHAP analysis revealed:
+- what the model actually learned
+- which features were useful
+- which features added noise
+
+---
+
+## 5. Market Context Matters
+Different market regimes create different prediction behavior.
+
+---
+
+## 6. Assumption Validation Is Essential
+Small threshold-definition mistakes completely changed analytical conclusions.
+
+---
+
+# Final Week 3 Conclusion
+
+The project evolved from:
+
+> basic predictive modeling
+
+into:
+
+> research-driven quantitative analysis
+
+This week introduced:
+- probabilistic forecasting
+- explainable AI
+- regime-aware modeling
+- calibration analysis
+- temporal validation
+- model reliability evaluation
+
+The system currently demonstrates:
+- weak but persistent predictive edge
+- momentum-driven behavior
+- moderate regime stability
+- low-confidence probability separation
+- realistic financial ML characteristics
