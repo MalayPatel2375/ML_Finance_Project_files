@@ -1649,3 +1649,315 @@ The system currently demonstrates:
 - moderate regime stability
 - low-confidence probability separation
 - realistic financial ML characteristics
+
+# WEEK 4 — DAYS 1 TO 3
+# Feature Engineering, Noise Reduction & Ensemble Learning
+
+---
+
+# DAY 1 — FEATURE CORRELATION ANALYSIS
+
+## Objective
+Analyze relationships between features to identify:
+- multicollinearity
+- redundancy
+- duplicated information
+- noisy inputs
+
+---
+
+## Key Concepts Learned
+
+### Correlation
+Correlation measures how strongly two features move together.
+
+- `+1` → almost identical movement
+- `0` → unrelated
+- `-1` → opposite movement
+
+---
+
+## Major Findings
+
+Extremely high correlations were discovered across the dataset.
+
+Examples:
+- Open ↔ High → `0.9999`
+- SMA_5 ↔ SMA_10 → `0.9997`
+- Close_Lag1 ↔ Close_Lag2 → `0.9997`
+
+This showed that many features were effectively:
+- duplicates
+- derived from the same price series
+- carrying nearly identical information
+
+---
+
+## Important Insight
+
+The model appeared to have many features, but most features contained overlapping information.
+
+This explained:
+- earlier overfitting behavior
+- weak confidence predictions
+- low SHAP importance for OHLC variables
+
+---
+
+## Financial ML Lesson
+
+More features do NOT automatically create:
+- better intelligence
+- stronger prediction quality
+
+In finance:
+- cleaner signals
+- lower redundancy
+- unique information
+
+often matter more than feature quantity.
+
+---
+
+# DAY 2 — FEATURE SELECTION & NOISE REDUCTION
+
+## Objective
+Reduce redundancy and build a cleaner feature set using:
+- SHAP insights
+- correlation analysis
+- feature importance findings
+
+---
+
+## Selected Features
+
+```python
+selected_features = [
+
+    "Daily_Return",
+    "RSI_14",
+    "Momentum_5",
+    "Volatility_5",
+    "Return_Lag1",
+    "Return_Lag2",
+    "Return_Lag3",
+    "Price_VS_SMA5",
+    "Price_VS_SMA20"
+]
+```
+
+---
+
+## Features Removed
+
+Removed highly redundant variables:
+- Open
+- High
+- Low
+- Close
+- SMA overlap features
+- lagged close duplication
+
+---
+
+## Results
+
+| Metric | Result |
+|---|---|
+| Original Features | 19 |
+| Reduced Features | 9 |
+| Accuracy | ~0.5355 |
+
+Despite removing 10 features:
+- model accuracy barely changed
+
+---
+
+## Important Discovery
+
+This strongly suggested:
+- many removed features added little real predictive value
+- redundancy was extremely high
+- simpler datasets can perform similarly
+
+---
+
+## Classification Behavior
+
+The model became:
+- highly bullish-biased
+- weak at detecting bearish moves
+
+Results:
+- bullish recall → `0.99`
+- bearish recall → `0.01`
+
+This showed:
+- cleaner models are not automatically smarter models
+- removing features can reduce prediction diversity
+
+---
+
+## Major Lesson
+
+Feature selection is NOT:
+`remove everything correlated`
+
+Instead:
+`remove redundancy without destroying useful signal diversity`
+
+---
+
+# DAY 3 — ENSEMBLE LEARNING
+
+## Objective
+Combine multiple ML models into a single prediction system using:
+- Logistic Regression
+- Random Forest
+- XGBoost
+
+through:
+- majority voting
+
+---
+
+## Ensemble Logic
+
+Each model predicted:
+- `0` → bearish
+- `1` → bullish
+
+Voting system:
+- if at least 2/3 models predicted bullish → final prediction = 1
+- otherwise → 0
+
+---
+
+## Results
+
+| Model | Accuracy |
+|---|---|
+| Logistic Regression | ~0.53 |
+| Random Forest | ~0.53 |
+| XGBoost | ~0.52–0.53 |
+| Ensemble | ~0.5355 |
+
+---
+
+## Agreement Analysis
+
+Agreement Rate:
+`84.37%`
+
+Meaning:
+- all three models made the same prediction most of the time
+
+---
+
+## Important Discovery
+
+The ensemble produced almost no improvement because:
+- all models learned similar market behavior
+- all models relied on similar features
+- all models captured similar weak signals
+
+This meant:
+`model diversity was very low`
+
+---
+
+## Classification Behavior
+
+The ensemble remained:
+- heavily bullish-biased
+- weak at bearish detection
+
+Results:
+- bullish recall → `0.95`
+- bearish recall → `0.06`
+
+---
+
+## Major Ensemble Lesson
+
+Adding more models does NOT automatically create:
+- stronger intelligence
+- better predictions
+
+Ensembles become powerful only when:
+- models think differently
+- models capture different patterns
+- models make different mistakes
+
+---
+
+# OVERALL WEEK 4 (DAYS 1–3) INSIGHTS
+
+## Core Discoveries
+
+### 1. Extreme Feature Redundancy Exists
+Most financial features were heavily correlated because they originated from the same underlying price series.
+
+---
+
+### 2. Simpler Models Can Perform Similarly
+Reducing features from 19 → 9 barely changed accuracy.
+
+This showed:
+- many features were unnecessary
+- redundancy was very high
+
+---
+
+### 3. Financial Signals Are Weak
+Even multiple sophisticated models converged toward similar predictions and similar accuracy levels.
+
+---
+
+### 4. Bullish Bias Persisted Across All Models
+Every model consistently favored bullish predictions.
+
+This suggested:
+- dataset-level bias
+- weak bearish signal detection
+- compressed probability separation
+
+---
+
+### 5. Ensemble Quality Depends on Diversity
+Three similar models do not create a significantly smarter system.
+
+Model diversity matters more than model quantity.
+
+---
+
+# Important Technical Concepts Learned
+
+- Multicollinearity
+- Feature Redundancy
+- Noise Reduction
+- Feature Selection
+- Dimensionality Reduction
+- Ensemble Learning
+- Majority Voting
+- Model Agreement Analysis
+- Signal Quality
+- Prediction Stability
+
+---
+
+# Biggest Takeaway
+
+This week shifted the project from:
+`building ML models`
+
+toward:
+`understanding how financial prediction systems actually behave`
+
+The project is now evolving into:
+- quantitative research
+- signal analysis
+- robustness evaluation
+- decision-system engineering
+
+rather than simple accuracy optimization.
