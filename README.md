@@ -1961,3 +1961,280 @@ The project is now evolving into:
 - decision-system engineering
 
 rather than simple accuracy optimization.
+
+# WEEK 4 — DAYS 4 TO 7
+# Model Reliability, Robustness & Market Regime Analysis
+
+---
+
+# DAY 4 — PROBABILITY CALIBRATION
+
+## Objective
+Evaluate whether the model's probability estimates can be trusted.
+
+---
+
+## Results
+
+| Metric | Value |
+|----------|----------|
+| Accuracy | 0.5355 |
+| Brier Score | 0.249 |
+| Average Probability | 0.5222 |
+| Maximum Probability | 0.5751 |
+| Minimum Probability | 0.4800 |
+| High Confidence Predictions (>70%) | 0 |
+
+---
+
+## Key Findings
+
+- Model accuracy remained around 53.5%.
+- Probabilities stayed very close to 50%.
+- The model never produced highly confident predictions.
+- No prediction exceeded 70% confidence.
+- Brier Score indicated weak probability quality.
+
+---
+
+## Important Lesson
+
+The model is not overconfident.
+
+Instead, it is:
+- uncertain most of the time
+- unable to identify strong trading opportunities
+- producing compressed probability estimates
+
+---
+
+## Takeaway
+
+The model has a small predictive edge, but confidence scores are not strong enough to support aggressive trading decisions.
+
+---
+
+# DAY 5 — FEATURE SENSITIVITY ANALYSIS
+
+## Objective
+Determine how dependent the model is on individual features.
+
+---
+
+## Method
+
+Removed one feature at a time and retrained the model.
+
+---
+
+## Results
+
+| Removed Feature | Accuracy |
+|----------|----------|
+| Daily_Return | 0.5371 |
+| RSI_14 | 0.5363 |
+| Return_Lag2 | 0.5363 |
+| Volatility_5 | 0.5358 |
+| Return_Lag1 | 0.5358 |
+| Return_Lag3 | 0.5356 |
+| Momentum_5 | 0.5355 |
+| Price_VS_SMA5 | 0.5355 |
+| Price_VS_SMA20 | 0.5355 |
+
+---
+
+## Key Findings
+
+- Removing any feature did not reduce accuracy.
+- Several feature removals slightly improved performance.
+- No feature was essential to the model.
+- Many features appear redundant.
+
+---
+
+## Important Lesson
+
+The model is not relying on any single feature.
+
+Instead:
+- multiple weak signals contribute collectively
+- feature overlap is extremely high
+- redundancy exists throughout the dataset
+
+---
+
+## Takeaway
+
+The primary limitation is signal quality rather than missing features.
+
+---
+
+# DAY 6 — REGIME-SPECIFIC FEATURE IMPORTANCE
+
+## Objective
+Determine whether feature importance changes across market conditions.
+
+---
+
+## Bullish Regime
+
+Top Features:
+
+| Feature | Importance |
+|----------|----------|
+| Return_Lag2 | 0.202 |
+| Return_Lag1 | 0.174 |
+| RSI_14 | 0.170 |
+| Daily_Return | 0.158 |
+| Price_VS_SMA20 | 0.153 |
+
+---
+
+## Bearish Regime
+
+Top Features:
+
+| Feature | Importance |
+|----------|----------|
+| Return_Lag2 | 0.243 |
+| Return_Lag3 | 0.204 |
+| Daily_Return | 0.159 |
+| Volatility_5 | 0.158 |
+| Return_Lag1 | 0.127 |
+
+---
+
+## Key Findings
+
+Bullish Markets:
+- RSI becomes more important.
+- Trend-related features contribute more.
+
+Bearish Markets:
+- Volatility becomes more important.
+- Longer return memory becomes more important.
+
+Across both regimes:
+- Return_Lag2 remained the strongest feature.
+
+---
+
+## Important Lesson
+
+Feature importance is not fixed.
+
+A feature may:
+- perform well in one regime
+- perform poorly in another
+
+---
+
+## Takeaway
+
+Market conditions influence which signals the model uses.
+
+---
+
+# DAY 7 — REGIME-SPECIFIC MODELS
+
+## Objective
+Train separate models for bullish and bearish market environments.
+
+---
+
+## Results
+
+| Regime | Samples | Accuracy |
+|----------|----------|----------|
+| Bullish | 32,301 | 0.5450 |
+| Bearish | 28,629 | 0.5260 |
+
+---
+
+## Key Findings
+
+Bullish Model:
+- Outperformed the overall baseline.
+- Produced the strongest accuracy observed this week.
+
+Bearish Model:
+- Underperformed the overall baseline.
+- Market behavior remained harder to predict.
+
+---
+
+## Important Lesson
+
+Not all market environments are equally predictable.
+
+Bullish markets:
+- exhibit stronger trends
+- contain more persistent signals
+
+Bearish markets:
+- contain more volatility
+- contain less stable patterns
+
+---
+
+## Takeaway
+
+The model predicts upward market conditions more effectively than downward market conditions.
+
+---
+
+# WEEK 4 OVERALL INSIGHTS
+
+## Major Discoveries
+
+### 1. Weak Confidence
+The model rarely produces strong confidence scores and remains close to 50/50 probabilities.
+
+### 2. High Feature Redundancy
+Removing individual features has little impact on performance.
+
+### 3. Dynamic Feature Importance
+Different market regimes rely on different signals.
+
+### 4. Bull Markets Are Easier To Predict
+The bullish model achieved the strongest performance.
+
+### 5. Signal Quality Remains The Main Challenge
+Model complexity is no longer the bottleneck.
+
+The next improvements will likely come from:
+- better features
+- stronger signals
+- alternative data sources
+- improved market representations
+
+rather than simply testing more algorithms.
+
+---
+
+# Technical Concepts Learned
+
+- Probability Calibration
+- Brier Score
+- Confidence Reliability
+- Feature Sensitivity Analysis
+- Model Robustness
+- Market Regimes
+- Regime-Specific Feature Importance
+- Adaptive Modeling
+- Regime-Based Machine Learning
+- Quantitative Research Methodology
+
+---
+
+# Biggest Takeaway
+
+Week 4 shifted the project from:
+
+"Which model is best?"
+
+to:
+
+"Under what market conditions does the model work best?"
+
+This represents a transition from traditional machine learning toward quantitative research and market behavior analysis.
