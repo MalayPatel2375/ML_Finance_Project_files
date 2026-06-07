@@ -2238,3 +2238,569 @@ to:
 "Under what market conditions does the model work best?"
 
 This represents a transition from traditional machine learning toward quantitative research and market behavior analysis.
+
+# Week 5: Advanced Feature Engineering & Feature Selection
+
+## Overview
+
+Week 5 focused on moving beyond traditional technical indicators and exploring advanced feature engineering techniques. The objective was to discover whether market structure, volume, volatility, and feature interactions could provide stronger predictive signals than conventional indicators.
+
+Throughout the week, dozens of engineered features were created, tested, validated, and either retained or removed based on objective model performance.
+
+---
+
+# Day 1: Market Structure Features
+
+## Objective
+
+Create features that capture market breakout and breakdown behavior.
+
+### New Features Created
+
+- Breakout_5
+- Breakout_10
+- Breakdown_5
+- Breakdown_10
+- Distance_From_High
+- Distance_From_Low
+
+---
+
+## Feature Statistics
+
+### Missing Values
+
+| Feature | Missing Values |
+|----------|----------|
+| Breakout_5 | 0 |
+| Breakout_10 | 0 |
+| Breakdown_5 | 0 |
+| Breakdown_10 | 0 |
+| Distance_From_High | 19 |
+| Distance_From_Low | 19 |
+
+---
+
+### Feature Counts
+
+| Feature | Positive Signals |
+|----------|----------|
+| Breakout_5 | 10,286 |
+| Breakout_10 | 7,827 |
+| Breakdown_5 | 6,705 |
+| Breakdown_10 | 4,528 |
+
+---
+
+## Model Results
+
+### Accuracy
+
+```text
+0.5256
+```
+
+---
+
+## Top Features
+
+| Feature | Importance |
+|----------|----------|
+| Daily_Return | 0.163 |
+| Price_VS_SMA20 | 0.151 |
+| Return_Lag3 | 0.133 |
+| Return_Lag1 | 0.131 |
+| Return_Lag2 | 0.125 |
+| Distance_From_Low | 0.107 |
+
+---
+
+## Key Findings
+
+### Successful Feature
+
+```text
+Distance_From_Low
+```
+
+provided useful information and entered the top feature rankings.
+
+### Failed Features
+
+```text
+Breakout_5
+Breakout_10
+Breakdown_5
+Breakdown_10
+Distance_From_High
+```
+
+all received zero importance.
+
+### Lesson Learned
+
+Simple breakout and breakdown indicators were not informative.
+
+The model preferred continuous distance-based information rather than binary breakout signals.
+
+---
+
+# Day 2: Volume-Based Features
+
+## Objective
+
+Determine whether volume behavior improves predictive performance.
+
+### New Features Created
+
+- RVOL
+- Volume_Change
+- Volume_Momentum
+- Volume_VS_Avg
+
+---
+
+## Model Results
+
+### Accuracy
+
+```text
+0.5257
+```
+
+---
+
+## Top Features
+
+| Feature | Importance |
+|----------|----------|
+| Volume_Change | 0.160 |
+| Daily_Return | 0.153 |
+| Price_VS_SMA20 | 0.138 |
+| Return_Lag3 | 0.124 |
+| Return_Lag1 | 0.122 |
+
+---
+
+## Key Findings
+
+### Successful Feature
+
+```text
+Volume_Change
+```
+
+became the strongest newly created feature.
+
+### Failed Features
+
+```text
+RVOL
+Volume_Momentum
+Volume_VS_Avg
+```
+
+received zero importance.
+
+### Lesson Learned
+
+Changes in volume matter more than raw volume levels.
+
+---
+
+# Day 3: Volatility Engineering
+
+## Objective
+
+Determine whether volatility behavior contains predictive information.
+
+### New Features Created
+
+- Volatility_Ratio
+- Volatility_Expansion
+- Volatility_Contraction
+- Volatility_Trend
+
+---
+
+## Model Results
+
+### Accuracy
+
+```text
+0.5258
+```
+
+---
+
+## Top Features
+
+| Feature | Importance |
+|----------|----------|
+| Volatility_Ratio | 0.105 |
+| Volatility_Trend | 0.070 |
+
+---
+
+## Key Findings
+
+### Successful Features
+
+```text
+Volatility_Ratio
+Volatility_Trend
+```
+
+### Failed Features
+
+```text
+Volatility_Expansion
+Volatility_Contraction
+```
+
+### Lesson Learned
+
+Relative volatility changes are more useful than simple volatility state flags.
+
+Markets react to changing volatility rather than volatility itself.
+
+---
+
+# Day 4: Feature Interaction Engineering
+
+## Objective
+
+Test whether relationships between features contain predictive information.
+
+### Interaction Features Created
+
+- RSI_Volume
+- Return_Volume
+- VolRation_Volume
+- RSI_VolRation
+- LowDist_Volume
+- Return_VolRation
+
+---
+
+## Model Results
+
+### Accuracy
+
+```text
+0.5258
+```
+
+---
+
+## Top Features
+
+| Feature | Importance |
+|----------|----------|
+| VolRation_Volume | 0.103 |
+| Return_Volume | 0.088 |
+
+---
+
+## Key Findings
+
+### Major Discovery
+
+```text
+VolRation_Volume
+```
+
+became the second most important feature in the model.
+
+### Observation
+
+Volume_Change lost all importance after interaction features were introduced.
+
+This suggests volume becomes useful only when combined with other market conditions.
+
+### Lesson Learned
+
+Relationships between variables are more informative than many standalone indicators.
+
+---
+
+# Day 5: Elite Feature Selection
+
+## Objective
+
+Create a compact feature set containing only the strongest signals.
+
+---
+
+## Elite Model Results
+
+### Accuracy
+
+```text
+0.5260
+```
+
+---
+
+## Selected Features
+
+```text
+Daily_Return
+RSI_14
+Return_Lag1
+Return_Lag2
+Return_Lag3
+Price_VS_SMA20
+Distance_From_Low
+Volatility_Ratio
+Volatility_Trend
+Return_Volume
+VolRation_Volume
+```
+
+---
+
+## Feature Stability Test
+
+### Removed Features
+
+| Feature Removed | Accuracy |
+|----------|----------|
+| RSI_14 | 0.5260 |
+| Distance_From_Low | 0.5260 |
+| Volatility_Trend | 0.5260 |
+| VolRation_Volume | 0.5260 |
+| Return_Volume | 0.5257 |
+
+---
+
+## Key Findings
+
+Only Return_Volume caused any measurable decline.
+
+Most elite features appeared partially redundant.
+
+---
+
+# Day 6: Feature Redundancy Analysis
+
+## Objective
+
+Determine whether surviving features overlap.
+
+---
+
+## Correlation Analysis
+
+### High Correlations
+
+```text
+None Found
+```
+
+No feature pair exceeded:
+
+```text
+0.80
+```
+
+correlation.
+
+---
+
+## Feature Uniqueness Scores
+
+| Feature | Uniqueness |
+|----------|----------|
+| VolRation_Volume | 0.980 |
+| Return_Lag3 | 0.911 |
+| Return_Volume | 0.906 |
+| Return_Lag1 | 0.905 |
+| Return_Lag2 | 0.903 |
+
+---
+
+## Lowest Uniqueness
+
+| Feature | Score |
+|----------|----------|
+| Price_VS_SMA20 | 0.684 |
+
+---
+
+## Key Findings
+
+The final feature set was highly diverse.
+
+No major redundancy existed among surviving features.
+
+---
+
+# Day 7: Final Feature Pruning
+
+## Objective
+
+Identify the smallest feature set that preserves performance.
+
+---
+
+## Baseline Accuracy
+
+```text
+0.5260
+```
+
+---
+
+## Pruning Results
+
+| Removed Feature | Accuracy | Accuracy Change |
+|----------|----------|----------|
+| RSI_14 | 0.5260 | 0.0000 |
+| Distance_From_Low | 0.5260 | 0.0000 |
+| Price_VS_SMA20 | 0.5252 | -0.0008 |
+
+---
+
+## Final Decisions
+
+### Removed
+
+```text
+RSI_14
+Distance_From_Low
+Price_VS_SMA20
+```
+
+### Retained
+
+```text
+Daily_Return
+Return_Lag1
+Return_Lag2
+Return_Lag3
+Volatility_Ratio
+Volatility_Trend
+Return_Volume
+VolRation_Volume
+```
+
+---
+
+# Final Week 5 Feature Set
+
+```text
+Daily_Return
+Return_Lag1
+Return_Lag2
+Return_Lag3
+Volatility_Ratio
+Volatility_Trend
+Return_Volume
+VolRation_Volume
+```
+
+---
+
+# Week 5 Features That Failed
+
+```text
+Breakout_5
+Breakout_10
+Breakdown_5
+Breakdown_10
+Distance_From_High
+
+RVOL
+Volume_Momentum
+Volume_VS_Avg
+
+Volatility_Expansion
+Volatility_Contraction
+
+RSI_Volume
+RSI_VolRation
+
+RSI_14
+Distance_From_Low
+Price_VS_SMA20
+```
+
+---
+
+# Week 5 Features That Survived
+
+```text
+Daily_Return
+Return_Lag1
+Return_Lag2
+Return_Lag3
+
+Volatility_Ratio
+Volatility_Trend
+
+Return_Volume
+VolRation_Volume
+```
+
+---
+
+# Major Lessons Learned
+
+## 1. Traditional Indicators Were Not the Strongest Signals
+
+Many common indicators eventually became redundant or unimportant.
+
+---
+
+## 2. Relative Information Beats Absolute Information
+
+Examples:
+
+```text
+Volatility_Ratio > Volatility_5
+
+Volume_Change > RVOL
+
+Distance_From_Low > Breakout Signals
+```
+
+---
+
+## 3. Interaction Features Are Powerful
+
+The strongest discoveries came from combining features:
+
+```text
+Return_Volume
+
+VolRation_Volume
+```
+
+---
+
+## 4. Simpler Models Can Perform Equally Well
+
+Feature pruning reduced complexity while maintaining accuracy.
+
+---
+
+## 5. Market Context Matters
+
+Returns, volatility, and volume become more informative when evaluated together rather than independently.
+
+---
+
+# Week 5 Conclusion
+
+Week 5 transformed the project from a traditional indicator-based model into a feature-engineered machine learning system.
+
+The strongest predictive signals were not standard technical indicators, but engineered features capturing relationships between:
+
+- Returns
+- Volatility
+- Volume
+
+The final result was a compact, interpretable feature set that maintained model performance while eliminating redundant information.
+
+This feature set will serve as the foundation for Week 6, where the focus shifts from feature engineering to model optimization, probability calibration, threshold tuning, and trading-system evaluation.
