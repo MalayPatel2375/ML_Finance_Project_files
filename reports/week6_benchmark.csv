@@ -1,0 +1,11 @@
+Metric,Value
+Accuracy,1.0
+F1 Score,0.6498
+Bullish Recall,0.8425
+Bearish Recall,0.1766
+Average Probability,0.5044999718666077
+Average Confidence,0.5066999793052673
+Bullish Prediction %,83.34
+False Positives,4779.0
+False Negatives,1003.0
+Total Features,8.0
