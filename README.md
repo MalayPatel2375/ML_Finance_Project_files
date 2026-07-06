@@ -2804,3 +2804,593 @@ The strongest predictive signals were not standard technical indicators, but eng
 The final result was a compact, interpretable feature set that maintained model performance while eliminating redundant information.
 
 This feature set will serve as the foundation for Week 6, where the focus shifts from feature engineering to model optimization, probability calibration, threshold tuning, and trading-system evaluation.
+
+# Week 6 – Probability Calibration, Threshold Optimization & Error Analysis
+
+## Overview
+
+Week 6 marked a shift from improving model accuracy to understanding **how the model behaves**. Instead of focusing solely on predictive performance, this week investigated prediction confidence, calibration, sample weighting, threshold optimization, and error analysis.
+
+The primary objective was to determine whether the current model could be improved through tuning or whether the limitation originated from the available feature set.
+
+---
+
+# Day 1 – XGBoost Baseline Evaluation
+
+## Objective
+
+Train a baseline XGBoost classifier and evaluate its prediction behaviour before applying any calibration techniques.
+
+## Work Completed
+
+* Trained an XGBoost classifier
+* Generated prediction probabilities
+* Evaluated prediction distribution
+* Computed confusion matrix
+* Compared predicted and actual class distributions
+
+## Results
+
+| Metric                  |      Value |
+| ----------------------- | ---------: |
+| Accuracy                | **52.57%** |
+| Bullish Prediction Rate | **98.33%** |
+| Model Edge              |  **0.25%** |
+
+## Key Findings
+
+* The model predicted almost every observation as **Bullish**.
+* Although the accuracy appeared acceptable, the prediction distribution was highly imbalanced.
+* This suggested that accuracy alone was not an adequate evaluation metric.
+
+---
+
+# Day 2 – Probability Calibration
+
+## Objective
+
+Evaluate the quality of the model's predicted probabilities and determine whether confidence values were meaningful.
+
+## Work Completed
+
+* Generated prediction probabilities
+* Calculated confidence values
+* Computed Brier Score
+* Tested multiple confidence thresholds
+
+## Results
+
+### Probability Statistics
+
+| Metric              |  Value |
+| ------------------- | -----: |
+| Minimum Probability | 0.3955 |
+| Maximum Probability | 0.5963 |
+| Average Probability | 0.5260 |
+
+### Brier Score
+
+**0.2492**
+
+### Threshold Performance
+
+| Threshold | Signals | Accuracy |
+| --------- | ------- | -------- |
+| 0.50      | 12,172  | 52.57%   |
+| 0.55      | 102     | 65.69%   |
+| 0.60      | 1       | 100%     |
+
+## Key Findings
+
+* Prediction probabilities were tightly clustered around **0.52**.
+* Very few predictions exceeded 0.55 confidence.
+* Higher confidence predictions were more accurate but extremely rare.
+* The model showed weak probability separation.
+
+---
+
+# Day 3 – High Confidence Prediction Analysis
+
+## Objective
+
+Determine whether the model's highest-confidence predictions were significantly more reliable.
+
+## Work Completed
+
+* Extracted high-confidence predictions
+* Compared predicted and actual class distributions
+* Investigated strongest predictions
+
+## Results
+
+| Metric                  |      Value |
+| ----------------------- | ---------: |
+| High Confidence Signals |    **102** |
+| Percentage of Test Set  |  **0.84%** |
+| Accuracy                | **65.69%** |
+| Average Confidence      |   **0.56** |
+
+## Key Findings
+
+* High-confidence predictions were substantially more accurate.
+* However, they represented less than **1%** of the entire dataset.
+* The model rarely generated predictions with strong conviction.
+
+---
+
+# Day 4 – Sample Weight Optimization
+
+## Objective
+
+Reduce bullish prediction bias by adjusting bearish sample weights during training.
+
+## Work Completed
+
+* Tested multiple bearish sample weights
+* Compared recall values
+* Evaluated prediction balance
+* Selected the optimal weight
+
+## Best Configuration
+
+**Bearish Sample Weight = 1.09**
+
+## Results
+
+| Metric                  |      Value |
+| ----------------------- | ---------: |
+| Accuracy                | **52.50%** |
+| Bullish Recall          | **84.25%** |
+| Bearish Recall          | **17.66%** |
+| Bullish Prediction Rate | **83.34%** |
+
+## Key Findings
+
+* Sample weighting reduced bullish prediction bias.
+* Prediction balance improved significantly.
+* Overall model accuracy remained largely unchanged.
+* Bearish market detection was still relatively weak.
+
+---
+
+# Day 5 – Threshold Optimization
+
+## Objective
+
+Determine whether modifying the classification threshold could improve prediction quality.
+
+## Work Completed
+
+* Evaluated thresholds between **0.45** and **0.60**
+* Compared accuracy
+* Compared recall
+* Compared prediction distributions
+
+## Results
+
+**Best Threshold: 0.50**
+
+Observations:
+
+* Lower thresholds classified nearly every sample as bullish.
+* Higher thresholds classified nearly every sample as bearish.
+* No threshold produced balanced performance.
+
+## Key Findings
+
+* Threshold optimization alone could not improve model performance.
+* Small threshold adjustments caused dramatic shifts in prediction behaviour.
+* Model probabilities remained concentrated around 0.50.
+
+---
+
+# Day 6 – Error Analysis
+
+## Objective
+
+Identify where the model makes mistakes and determine whether incorrect predictions share common characteristics.
+
+## Work Completed
+
+* Compared correct and incorrect predictions
+* Calculated false positives and false negatives
+* Compared average feature values
+* Compared prediction confidence
+* Reviewed highest-confidence incorrect predictions
+
+## Results
+
+| Metric                |      Value |
+| --------------------- | ---------: |
+| Total Test Samples    | **12,172** |
+| Correct Predictions   |  **6,390** |
+| Incorrect Predictions |  **5,782** |
+| False Positives       |  **4,779** |
+| False Negatives       |  **1,003** |
+
+### Confidence Comparison
+
+| Prediction Type | Average Confidence |
+| --------------- | -----------------: |
+| Correct         |         **0.5068** |
+| Incorrect       |         **0.5066** |
+
+## Key Findings
+
+* The model produced nearly **five times more false positives** than false negatives.
+* Correct and incorrect predictions exhibited nearly identical feature values.
+* Confidence values were virtually identical for correct and incorrect predictions.
+* Even the model's most confident incorrect predictions had confidence values close to **55%**, indicating very limited certainty.
+
+---
+
+# Day 7 – Final Benchmark
+
+## Objective
+
+Create a final benchmark summarizing the model's performance before moving to cloud deployment and advanced feature engineering.
+
+## Final Model Configuration
+
+### Model
+
+* XGBoost Classifier
+
+### Final Feature Set
+
+* Daily_Return
+* Return_Lag1
+* Return_Lag2
+* Return_Lag3
+* Volatility_Ratio
+* Volatility_Trend
+* Return_Volume
+* VolRation_Volume
+
+### Sample Weight
+
+**1.09**
+
+### Decision Threshold
+
+**0.50**
+
+---
+
+## Final Benchmark
+
+| Metric             | Result                  |
+| ------------------ | ----------------------- |
+| Accuracy           | ~52.5%                  |
+| Bullish Recall     | ~84%                    |
+| Bearish Recall     | ~18%                    |
+| Average Confidence | ~50.7%                  |
+| Prediction Bias    | Bullish                 |
+| Primary Limitation | Weak Feature Separation |
+
+---
+
+# Major Learnings
+
+## Accuracy Alone Is Misleading
+
+Classification accuracy should always be evaluated alongside confidence, recall, prediction balance, and calibration.
+
+---
+
+## Probability Calibration Provides Deeper Insight
+
+Prediction probabilities revealed substantially more information than accuracy alone.
+
+---
+
+## Sample Weighting Improved Prediction Balance
+
+Sample weighting reduced bullish bias but produced only modest improvements in overall model behaviour.
+
+---
+
+## Threshold Optimization Has Practical Limits
+
+Adjusting decision thresholds significantly changed prediction distributions but did not meaningfully improve predictive performance.
+
+---
+
+## Error Analysis Identified the True Bottleneck
+
+Correct and incorrect predictions occurred under almost identical feature conditions.
+
+This strongly suggests that the current feature set lacks sufficient predictive information for the model to confidently distinguish bullish and bearish market movements.
+
+---
+
+# Overall Conclusion
+
+Week 6 demonstrated that the primary limitation of the current financial machine learning model is **not the XGBoost algorithm or its hyperparameters**, but the **quality and predictive strength of the engineered features**.
+
+Across probability calibration, sample weighting, threshold optimization, and detailed error analysis, model performance consistently remained around **52–53% accuracy**. These results indicate that further parameter tuning is unlikely to provide substantial improvements.
+
+Future progress should therefore focus on expanding the feature set with richer technical indicators, broader market context, and production-ready deployment.
+
+---
+
+# Next Steps
+
+## Week 7 – AWS Cloud Integration
+
+* AWS Cloud Practitioner (alongside the project)
+* Amazon S3 integration
+* EC2 deployment
+* Automated daily data pipeline
+* Automated prediction pipeline
+* Cloud-based prediction storage
+
+---
+
+## Week 8 – Advanced Feature Engineering
+
+* EMA indicators
+* MACD
+* ATR
+* Bollinger Bands
+* OBV
+* Money Flow Index
+* VIX
+* S&P 500 features
+* Sector ETF features
+* Cross-asset indicators
+* Time-based features
+* Advanced price action indicators
+
+---
+
+# Week 6 Summary
+
+Week 6 transformed the project from simply evaluating prediction accuracy into understanding **model reliability, confidence, and limitations**.
+
+The experiments consistently demonstrated that the current performance ceiling is not caused by the learning algorithm itself, but by the information contained within the available features. This establishes a strong foundation for the next phase of the project, where cloud deployment and richer feature engineering will become the primary focus.
+
+# Week 7: Cloud Integration & AWS Foundations
+
+## Weekly Goal
+
+After completing six weeks focused on machine learning, feature engineering, model evaluation, and probability analysis, the project transitioned into cloud engineering. The objective of Week 7 is to migrate the Financial Machine Learning pipeline toward a production-ready cloud architecture using AWS services.
+
+---
+
+# Day 1 – AWS Environment Setup
+
+## Objective
+
+Establish the cloud infrastructure required for future model training and deployment.
+
+## Topics Learned
+
+- Introduction to AWS Cloud
+- AWS Console
+- Identity and Access Management (IAM)
+- IAM Users and Permissions
+- AWS CLI
+- Programmatic Authentication
+
+## Tasks Completed
+
+- Created AWS Account
+- Created Administrator IAM User
+- Created restricted IAM user (`ml_user_predict`)
+- Configured AWS CLI
+- Verified authentication using AWS STS
+- Installed boto3
+- Connected local project with AWS
+
+## Engineering Decisions
+
+Instead of using the root AWS account, all project operations use a dedicated IAM user following the Principle of Least Privilege.
+
+---
+
+# Day 2 – Amazon S3 & Intelligent Synchronization
+
+## Objective
+
+Replace manual dataset management with an automated cloud synchronization layer.
+
+## AWS Services Used
+
+- Amazon S3
+- IAM
+- boto3 SDK
+
+## S3 Architecture
+
+Created an organized S3 data lake.
+
+```
+Bucket
+
+data/
+    raw/
+    processed/
+    features/
+    model_inputs/
+    predictions/
+
+models/
+    xgboost/
+    checkpoints/
+    archived/
+
+reports/
+
+logs/
+
+config/
+```
+
+## Cloud Module
+
+Implemented a dedicated cloud package responsible for AWS operations.
+
+```
+cloud/
+
+config.py
+
+s3_client.py
+
+uploader.py
+
+downloader.py
+
+manifest.py
+
+utils.py
+
+sync.py
+```
+
+## Synchronization Engine
+
+Designed and implemented an intelligent synchronization engine.
+
+Workflow:
+
+Local Dataset
+
+↓
+
+Generate MD5 Hash
+
+↓
+
+Compare Manifest
+
+↓
+
+File Changed?
+
+↓
+
+Upload to Amazon S3
+
+↓
+
+Update Manifest
+
+## Validation
+
+Three synchronization scenarios were successfully tested.
+
+### Test 1
+
+Initial synchronization
+
+Result:
+
+- Uploaded: 11
+- Skipped: 0
+
+---
+
+### Test 2
+
+Run synchronization again
+
+Result:
+
+- Uploaded: 0
+- Skipped: 11
+
+---
+
+### Test 3
+
+Modify a single dataset
+
+Result:
+
+- Uploaded: 1
+- Skipped: 10
+
+The synchronization engine correctly uploaded only the modified dataset.
+
+## Challenges
+
+### AWS Credentials
+
+Initially encountered:
+
+NoCredentialsError
+
+Resolved by configuring AWS CLI correctly.
+
+### IAM Permissions
+
+Encountered:
+
+AccessDenied
+
+Resolved by attaching AmazonS3FullAccess to the project IAM user.
+
+## Engineering Decisions
+
+- Created a dedicated cloud layer instead of embedding AWS code into ML scripts.
+- Used MD5 hashing instead of timestamps to detect file changes.
+- Maintained upload state through a manifest file.
+- Organized S3 using a production-style data lake structure.
+
+## Weekly Deliverablesss
+
+✔ AWS Account
+
+✔ IAM Configuration
+
+✔ AWS CLI
+
+✔ Amazon S3 Bucket
+
+✔ Cloud Module
+
+✔ Intelligent Synchronization Engine
+
+✔ Automated Dataset Uploads
+
+✔ Manifest Tracking
+
+✔ Incremental Synchronization
+
+## Key Learning
+
+Week 7 marks the evolution of the project from a locally executed machine learning workflow into a cloud-enabled machine learning platform. Future work will leverage Amazon SageMaker to train and deploy models directly from datasets stored in Amazon S3.
+
+                    Financial ML Platform
+
+                  Yahoo Finance API
+                          │
+                          ▼
+                Local Data Collection
+                          │
+                          ▼
+                Feature Engineering
+                          │
+                          ▼
+                Model Input Datasets
+                          │
+                          ▼
+             Intelligent Cloud Sync Engine
+                          │
+                          ▼
+                  Amazon S3 Data Lake
+                  ┌─────────┴─────────┐
+                  ▼                   ▼
+         Local Development    SageMaker Studio
+                  │                   │
+                  └─────────┬─────────┘
+                            ▼
+                     XGBoost Training
+                            │
+                            ▼
+                    Trained ML Models
+                            │
+                            ▼
+                      Amazon S3 Storage

@@ -3,6 +3,16 @@ __pycache__/
 .ipynb_checkpoints/
 data/raw/
 *.pyc
+*.pyo
+.vscode/
+.idea/
+aws_cloud/manifest.json
+.DS_Store
+Thumbs.db
+.aws/
 .env
 data/
 logs/
+*.log
+aws_credentials.txt
+.env
