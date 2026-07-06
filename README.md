@@ -3394,3 +3394,304 @@ Week 7 marks the evolution of the project from a locally executed machine learni
                             │
                             ▼
                       Amazon S3 Storage
+
+# Week 7 - Day 3 & Day 4
+## Amazon SageMaker Integration & Cloud Model Training
+
+---
+
+# Overview
+
+This milestone focused on transitioning the Financial Machine Learning project from a fully local development environment to a cloud-based machine learning workflow using Amazon Web Services (AWS). The objective was to establish a reproducible cloud training environment while maintaining consistency with the existing local ML pipeline.
+
+---
+
+# Day 3 - Amazon SageMaker Environment Setup
+
+## Objectives
+
+- Configure Amazon SageMaker Studio
+- Validate AWS IAM permissions
+- Connect SageMaker to the project S3 bucket
+- Verify cloud access to project datasets
+- Establish a reproducible cloud development environment
+
+---
+
+## Infrastructure Configuration
+
+Successfully configured:
+
+- Amazon SageMaker Studio Domain
+- SageMaker User Profile
+- SageMaker Execution Role
+- AWS IAM Authentication
+- Amazon S3 connectivity
+- JupyterLab cloud environment
+
+---
+
+## S3 Integration
+
+Verified successful connection to the project data lake.
+
+Project Bucket:
+
+```
+malay-ml-sagemaker
+```
+
+Validated project directories:
+
+```
+data/
+├── raw/
+├── processed/
+├── features/
+├── model_input/
+├── predictions/
+
+models/
+config/
+logs/
+reports/
+```
+
+---
+
+## Dataset Validation
+
+Successfully loaded the primary modeling dataset directly from Amazon S3.
+
+Dataset Statistics
+
+| Metric | Value |
+|---------|------:|
+| Samples | 60,859 |
+| Features | 39 |
+| Missing Values | 0 |
+| Bullish Samples | 52.52% |
+| Bearish Samples | 47.48% |
+
+This confirmed that the cloud dataset exactly matched the local development dataset.
+
+---
+
+## Key Challenges Solved
+
+### SageMaker SDK Compatibility
+
+While configuring the notebook environment, differences between SageMaker SDK versions required adjustments to the development workflow.
+
+Lessons learned:
+
+- SDK version compatibility
+- Python environment management
+- Cloud package dependencies
+
+---
+
+### Project Structure Consistency
+
+Identified a naming inconsistency between:
+
+```
+model_input
+```
+
+and
+
+```
+model_inputs
+```
+
+Standardized the project to use:
+
+```
+data/model_input/
+```
+
+across:
+
+- Local project
+- Amazon S3
+- SageMaker notebooks
+- Synchronization engine
+
+---
+
+## Day 3 Outcome
+
+Successfully established a fully functional cloud development environment capable of reading project datasets directly from Amazon S3.
+
+---
+
+# Day 4 - Cloud Model Training
+
+## Objectives
+
+- Integrate GitHub with SageMaker
+- Reuse existing training pipeline
+- Train XGBoost inside SageMaker
+- Validate cloud reproducibility
+- Store model artifacts
+
+---
+
+## GitHub Integration
+
+Migrated the project workflow from manual file management to Git-based development.
+
+Current workflow:
+
+```
+VS Code
+      │
+      ▼
+GitHub Repository
+      │
+      ▼
+Amazon SageMaker Studio
+```
+
+This provides a single source of truth for future development.
+
+---
+
+## Reusable Training Pipeline
+
+Created a reusable training module:
+
+```
+training/
+
+├── __init__.py
+├── cloud_training.py
+├── evaluation.py
+└── utils.py
+```
+
+The training pipeline now performs:
+
+- Feature selection
+- Time-based train/test split
+- StandardScaler preprocessing
+- Sample weighting
+- XGBoost training
+- Performance evaluation
+- Probability prediction
+
+---
+
+## Model Configuration
+
+Model:
+
+```
+XGBoost Classifier
+```
+
+Hyperparameters:
+
+| Parameter | Value |
+|-----------|-------|
+| Estimators | 50 |
+| Max Depth | 2 |
+| Learning Rate | 0.01 |
+| Sample Weight | 1.09 |
+
+These settings reproduce the optimized configuration developed during Weeks 3–6.
+
+---
+
+## Cloud Training Results
+
+Successfully trained the Financial ML model inside Amazon SageMaker.
+
+Cloud evaluation matched the locally trained model, confirming that the cloud environment reproduces the existing machine learning pipeline without performance degradation.
+
+Validated metrics:
+
+- Accuracy
+- F1 Score
+- Classification Report
+- Confusion Matrix
+- Prediction Probabilities
+
+---
+
+## Model Artifact Management
+
+Saved trained model artifacts:
+
+```
+models/
+
+└── xgboost/
+
+    xgboost_financial_model_v1.json
+
+    training_metrics.json
+
+    feature_names.json
+```
+
+Uploaded all artifacts to Amazon S3 for centralized storage.
+
+---
+
+# Architecture
+
+```
+                Local Development
+                       │
+                 Visual Studio Code
+                       │
+                       ▼
+                  GitHub Repository
+                       │
+                       ▼
+                Amazon SageMaker
+                       │
+              Cloud Model Training
+                       │
+                       ▼
+                Amazon S3 Storage
+                       │
+                       ▼
+              Versioned ML Artifacts
+```
+
+---
+
+# Skills Developed
+
+- Amazon SageMaker Studio
+- Amazon S3 Data Management
+- AWS IAM Roles & Permissions
+- Cloud-based Machine Learning
+- GitHub Integration
+- Modular ML Pipeline Design
+- Model Artifact Management
+- Cloud Reproducibility
+- MLOps Fundamentals
+
+---
+
+# Key Takeaways
+
+- Successfully transitioned from local-only machine learning to cloud-based training.
+- Established GitHub as the single source of truth for project development.
+- Verified reproducible model training across local and cloud environments.
+- Implemented reusable training modules to improve maintainability.
+- Stored trained models and metadata in Amazon S3 for future deployment and versioning.
+
+---
+
+# Next Steps
+
+- Implement SageMaker Training Jobs
+- Automate cloud model training
+- Build model inference pipeline
+- Deploy trained models as scalable endpoints
+- Introduce automated MLOps workflows
