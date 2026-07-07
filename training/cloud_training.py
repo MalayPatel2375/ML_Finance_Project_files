@@ -1,5 +1,8 @@
 import pandas as pd
 import numpy as np
+import os
+import json
+import joblib
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import(
@@ -10,6 +13,12 @@ from sklearn.metrics import(
 )
 
 from xgboost import XGBClassifier
+
+artifact_dir = "artifacts"
+
+os.makedirs(f"{artifact_dir}/models", exist_ok=True)
+os.makedirs(f"{artifact_dir}/metrics", exist_ok=True)
+os.makedirs(f"{artifact_dir}/features", exist_ok=True)
 
 FEATURES = [
 
@@ -117,5 +126,21 @@ def train_model(df, sample_weight_value=1.09):
 
     }
 
-    return model, metrics
+    metrics_to_save = {
+    "accuracy": float(metrics["accuracy"]),
+    "f1_score": float(metrics["f1_score"]),
+    "classification_report": metrics["classification_report"],
+    "confusion_matrix": metrics["confusion_matrix"].tolist()
+    }
 
+    model.save_model(f"{artifact_dir}/models/xgboost_financial_model_v1.json")
+
+    joblib.dump(scaler, f"{artifact_dir}/models/standard_scaler.pkl")
+
+    with open(f"{artifact_dir}/metrics/training_metrics.json", "w") as f:
+        json.dump(metrics_to_save, f, indent=4)
+    
+    with open(f"{artifact_dir}/features/feature_names.json", "w") as f:
+        json.dump(FEATURES, f, indent=4)
+
+    return scaler, model, metrics

@@ -6,6 +6,6 @@ df = pd.read_csv(
     "data/model_input/model_interaction_data.csv"
 )
 
-model, metrics = train_model(df)
+scaler, model, metrics = train_model(df)
 
 print(metrics["accuracy"])
