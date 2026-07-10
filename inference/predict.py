@@ -28,3 +28,22 @@ def predict(
     })
 
     return results
+
+def predict_single(model, scaler, sample):
+
+    if isinstance(sample, pd.Series):
+        sample = sample.to_frame().T
+
+    sample_scaled = scaler.transform(sample)
+
+    probability = model.predict_proba(sample_scaled)[0][1]
+
+    prediction = int(probability >= 0.5)
+
+    confidence = max(probability, 1 - probability)
+
+    return {
+        "Prediction": prediction,
+        "Probability": float(probability),
+        "Confidence": float(confidence)
+    }
