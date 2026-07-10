@@ -14,18 +14,13 @@ def predict(
 
     predictions = (probabilities >= 0.5).astype(int)
 
-    results = pd.DataFrame({
+    results = X.copy()
 
-        "Prediction": predictions,
+    results["Prediction"] = predictions
 
-        "Probability": probabilities,
+    results["Probability"] = probabilities
 
-        "Confidence": np.maximum(
-            probabilities,
-            1 - probabilities
-        )
-
-    })
+    results["Confidence"] = np.maximum(probabilities, 1 - probabilities)
 
     return results
 
