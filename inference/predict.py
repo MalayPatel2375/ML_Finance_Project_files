@@ -1,8 +1,17 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 
-def predict(model, scaler, data):
-    probabilities = model.predict_proba(data)[:, 1]
+
+def predict(
+    model,
+    scaler,
+    X,
+):
+
+    X_scaled = scaler.transform(X)
+
+    probabilities = model.predict_proba(X_scaled)[:, 1]
+
     predictions = (probabilities >= 0.5).astype(int)
 
     results = pd.DataFrame({
