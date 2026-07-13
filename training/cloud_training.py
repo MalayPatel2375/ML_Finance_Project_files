@@ -4,6 +4,7 @@ import os
 import json
 import joblib
 
+from datetime import datetime
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import(
     classification_report,
@@ -14,31 +15,18 @@ from sklearn.metrics import(
 
 from xgboost import XGBClassifier
 
+from config.feature_config import FEATURES
+from registry.registry import register_model
+from config.project_config import MODEL_VERSION, MODEL_NAME
+from config.artifact_config import MODEL_PATH, SCALER_PATH, METRICS_PATH, FEATURE_PATH
+
 artifact_dir = "artifacts"
 
 os.makedirs(f"{artifact_dir}/models", exist_ok=True)
 os.makedirs(f"{artifact_dir}/metrics", exist_ok=True)
 os.makedirs(f"{artifact_dir}/features", exist_ok=True)
 
-FEATURES = [
-
-    "Daily_Return",
-
-    "Return_Lag1",
-
-    "Return_Lag2",
-
-    "Return_Lag3",
-
-    "Volatility_Ratio",
-
-    "Volatility_Trend",
-
-    "Return_Volume",
-
-    "VolRation_Volume",
-
-]
+FEATURES = FEATURES
 
 TARGET = "Target"
 
@@ -142,5 +130,31 @@ def train_model(df, sample_weight_value=1.09):
     
     with open(f"{artifact_dir}/features/feature_names.json", "w") as f:
         json.dump(FEATURES, f, indent=4)
+    
+    model_info = {
+
+    "model_name": MODEL_NAME,
+
+    "version": MODEL_VERSION,
+
+    "trained_on": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+
+    "accuracy": float(metrics["accuracy"]),
+
+    "f1_score": float(metrics["f1_score"]),
+
+    "feature_count": len(FEATURES),
+
+    "model_path": str(MODEL_PATH),
+
+    "scaler_path": str(SCALER_PATH),
+
+    "metrics_path": str(METRICS_PATH),
+
+    "feature_path": str(FEATURE_PATH)
+
+    }
+
+    register_model(model_info)
 
     return scaler, model, metrics

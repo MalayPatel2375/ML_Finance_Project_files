@@ -7,6 +7,8 @@ from inference.predict import predict, predict_single
 from inference.load_model import load_xgboost_model
 from inference.load_scaler import load_scaler
 
+from config.aws_config import BUCKET_NAME, AWS_REGION
+
 def validate():
 
     print("=" * 60)
@@ -27,7 +29,7 @@ def validate():
     print(f"✓ Loaded {len(features)} features")
 
     #Load dataset from S3
-    bucket = "malay-ml-sagemaker"
+    bucket = BUCKET_NAME
     key = "data/model_input/model_interaction_data.csv"
 
     s3 = boto3.client("s3")

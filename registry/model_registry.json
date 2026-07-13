@@ -1,0 +1,16 @@
+{
+    "models": [
+        {
+            "model_name": "Financial XGBoost",
+            "version": "v1",
+            "trained_on": "2026-07-13 08:35:50",
+            "accuracy": 0.52464673020046,
+            "f1_score": 0.6495457298606905,
+            "feature_count": 8,
+            "model_path": "artifacts\\models\\xgboost_financial_model_v1.json",
+            "scaler_path": "artifacts\\models\\standard_scaler.pkl",
+            "metrics_path": "artifacts\\metrics\\training_metrics.json",
+            "feature_path": "artifacts\\features\\feature_names.json"
+        }
+    ]
+}

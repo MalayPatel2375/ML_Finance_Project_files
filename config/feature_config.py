@@ -1,0 +1,23 @@
+"""
+Model Feature Configuration
+"""
+
+FEATURES = [
+
+    "Daily_Return",
+
+    "Return_Lag1",
+
+    "Return_Lag2",
+
+    "Return_Lag3",
+
+    "Volatility_Ratio",
+
+    "Volatility_Trend",
+
+    "Return_Volume",
+
+    "VolRation_Volume",
+
+]

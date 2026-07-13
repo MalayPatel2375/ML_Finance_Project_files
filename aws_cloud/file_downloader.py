@@ -1,7 +1,8 @@
 import boto3
 from pathlib import Path
+from config.aws_config import BUCKET_NAME
 
-BUCKET = "malay-ml-sagemaker"
+BUCKET = BUCKET_NAME
 
 s3 = boto3.client("s3")
 

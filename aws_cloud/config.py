@@ -1,8 +1,9 @@
 from pathlib import Path
+from config.aws_config import BUCKET_NAME, AWS_REGION
 
 # AWS 
-AWS_REGION = "us-east-1"
-BUCKET_NAME = "malay-ml-sagemaker"
+AWS_REGION = AWS_REGION
+BUCKET_NAME = BUCKET_NAME
 
 # PROJECT ROOT
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
