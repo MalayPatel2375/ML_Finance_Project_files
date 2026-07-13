@@ -6,13 +6,16 @@ import boto3
 from inference.predict import predict, predict_single
 from inference.load_model import load_xgboost_model
 from inference.load_scaler import load_scaler
+from utils.logger import get_logger
 
 from config.aws_config import BUCKET_NAME, AWS_REGION
+
+logger = get_logger(__name__)
 
 def validate():
 
     print("=" * 60)
-    print("Starting Inference Validation")
+    logger.info("Starting inference validation.")
     print("=" * 60)
 
     #Load artifacts
