@@ -3695,3 +3695,334 @@ Uploaded all artifacts to Amazon S3 for centralized storage.
 - Build model inference pipeline
 - Deploy trained models as scalable endpoints
 - Introduce automated MLOps workflows
+
+# Week 7 - Day 5
+## Building the Inference Pipeline
+
+### Overview
+
+Day 5 focused on separating model training from model inference. Instead of retraining the model every time predictions were needed, a reusable inference pipeline was developed using the saved model artifacts.
+
+This marks the transition from a research-focused workflow to a deployment-oriented machine learning architecture.
+
+---
+
+## Objectives
+
+- Load trained model without retraining
+- Load fitted StandardScaler
+- Build reusable inference functions
+- Support single and batch predictions
+- Validate the complete inference pipeline
+
+---
+
+## Work Completed
+
+### Model Artifact Loading
+
+Created reusable utilities to load:
+
+- Trained XGBoost model
+- StandardScaler
+- Feature metadata
+
+Modules Created:
+
+- `inference/load_model.py`
+- `inference/load_scaler.py`
+
+---
+
+### Prediction Pipeline
+
+Implemented reusable inference functions:
+
+- Batch prediction
+- Single record prediction
+- Probability estimation
+- Confidence scoring
+
+Modules:
+
+- `predict()`
+- `predict_single()`
+
+---
+
+### Scaler Serialization
+
+Improved the training pipeline by saving the fitted StandardScaler alongside the trained model.
+
+Artifacts Generated:
+
+- xgboost_financial_model_v1.json
+- standard_scaler.pkl
+- training_metrics.json
+- feature_names.json
+
+---
+
+### Validation Pipeline
+
+Created an automated validation workflow to verify:
+
+- Model loading
+- Scaler loading
+- Feature integrity
+- Batch inference
+- Single inference
+
+Validation completed successfully.
+
+---
+
+## Skills Practiced
+
+- Model serialization
+- Artifact management
+- Cloud inference
+- Production inference workflow
+- Machine learning deployment concepts
+
+---
+
+## Outcome
+
+Successfully transformed the project from a training-only pipeline into a reusable inference system capable of loading previously trained models and generating predictions without retraining.
+
+# Week 7 - Day 6
+## Project Refactoring & Deployment Readiness
+
+### Overview
+
+Day 6 focused on improving the software engineering quality of the project. The codebase was refactored to improve maintainability, configuration management, artifact synchronization, and model version tracking.
+
+The project was prepared for deployment by removing duplicated configuration and introducing a lightweight model registry.
+
+---
+
+## Objectives
+
+- Refactor project configuration
+- Centralize project constants
+- Introduce model registry
+- Improve cloud synchronization
+- Prepare project for deployment
+
+---
+
+## Work Completed
+
+### Configuration Refactoring
+
+Created centralized configuration modules for:
+
+- AWS configuration
+- Artifact paths
+- Feature definitions
+- Project metadata
+
+Removed duplicated constants throughout the project.
+
+---
+
+### Lightweight Model Registry
+
+Designed a simple model registry capable of tracking:
+
+- Model name
+- Version
+- Training timestamp
+- Accuracy
+- F1 Score
+- Feature count
+- Artifact locations
+
+Modules Created:
+
+- `registry/registry.py`
+- `registry/model_registry.json`
+
+---
+
+### Cloud Synchronization Improvements
+
+Extended the synchronization engine to include ML artifacts.
+
+Artifacts synchronized:
+
+- Model
+- StandardScaler
+- Feature metadata
+- Training metrics
+
+---
+
+### Deployment Readiness
+
+Verified:
+
+- Project structure
+- Cloud synchronization
+- Validation pipeline
+- Model registry
+- Artifact management
+- GitHub repository cleanliness
+
+---
+
+## Skills Practiced
+
+- Software architecture
+- Configuration management
+- Model versioning
+- Cloud synchronization
+- Production engineering practices
+
+---
+
+## Outcome
+
+The project now contains a maintainable architecture with centralized configuration, reusable cloud synchronization, and a lightweight model registry suitable for future deployment.
+
+# Week 7 Summary
+## AWS Integration & Production ML Pipeline
+
+Week 7 represented the largest architectural upgrade of the Financial Machine Learning project.
+
+The primary objective was to migrate from a local research environment to a cloud-enabled machine learning workflow using Amazon Web Services while introducing production-oriented software engineering practices.
+
+---
+
+## Major Accomplishments
+
+### AWS Cloud Infrastructure
+
+- Configured AWS account and IAM user
+- Created secure S3 bucket
+- Configured AWS CLI
+- Established cloud storage architecture
+
+---
+
+### Intelligent Synchronization Engine
+
+Designed an automated synchronization engine capable of:
+
+- Detecting modified files
+- Uploading only changed files
+- Preventing duplicate uploads
+- Maintaining synchronization manifests
+
+---
+
+### SageMaker Integration
+
+Configured Amazon SageMaker Studio and successfully migrated the machine learning workflow to the cloud.
+
+Completed:
+
+- Cloud notebook environment
+- Remote training
+- Cloud data access
+- AWS execution roles
+
+---
+
+### Cloud Training Pipeline
+
+Implemented a reusable cloud training pipeline capable of:
+
+- Training XGBoost models
+- Saving model artifacts
+- Saving preprocessing objects
+- Exporting training metrics
+- Generating feature metadata
+
+---
+
+### Inference Pipeline
+
+Built a reusable inference system supporting:
+
+- Model loading
+- Scaler loading
+- Batch inference
+- Single record inference
+- Probability estimation
+- Confidence scoring
+
+No model retraining is required during inference.
+
+---
+
+### Artifact Management
+
+Implemented artifact management for:
+
+- Trained model
+- StandardScaler
+- Feature metadata
+- Training metrics
+
+Artifacts are synchronized between the local environment and Amazon S3.
+
+---
+
+### Lightweight Model Registry
+
+Developed a lightweight model registry capable of tracking:
+
+- Model version
+- Accuracy
+- F1 Score
+- Feature count
+- Training timestamp
+- Artifact locations
+
+---
+
+### Project Refactoring
+
+Improved project maintainability by introducing:
+
+- Centralized configuration
+- Modular architecture
+- Reusable utilities
+- Deployment-ready folder structure
+
+---
+
+## Technologies Used
+
+- Python
+- XGBoost
+- Scikit-Learn
+- Boto3
+- Amazon S3
+- Amazon SageMaker
+- AWS IAM
+- Git
+- GitHub
+
+---
+
+## Key Learning Outcomes
+
+- Cloud-based machine learning workflows
+- Model serialization
+- Artifact management
+- Production inference pipelines
+- Configuration management
+- Cloud synchronization
+- Model versioning
+- Software architecture for ML systems
+
+---
+
+## Week 7 Outcome
+
+The project evolved from a local machine learning experiment into a cloud-enabled, modular machine learning system capable of training, storing, loading, validating, and managing models using AWS services.
+
+This week established the foundation for model deployment and scalable machine learning workflows planned for Week 8.

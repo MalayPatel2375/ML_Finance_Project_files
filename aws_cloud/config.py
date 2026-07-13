@@ -39,3 +39,14 @@ MODEL_INPUT_PREFIX = "data/model_input/"
 PREDICTION_PREFIX = "data/predictions/"
 
 MODEL_PREFIX = "models/xgboost/"
+
+# ARTIFACTS
+ARTIFACT_MODEL_DIR = Path("artifacts/models")
+
+ARTIFACT_METRICS_DIR = Path("artifacts/metrics")
+
+ARTIFACT_FEATURES_DIR = Path("artifacts/features")
+
+ARTIFACT_MODEL_PREFIX = "models/xgboost/"
+ARTIFACT_METRICS_PREFIX = "models/xgboost/"
+ARTIFACT_FEATURES_PREFIX = "models/xgboost/"

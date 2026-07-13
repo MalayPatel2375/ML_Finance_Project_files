@@ -7,7 +7,13 @@ from aws_cloud.config import (
     RAW_PREFIX,
     PROCESSED_PREFIX,
     FEATURE_PREFIX,
-    MODEL_INPUT_PREFIX
+    MODEL_INPUT_PREFIX,
+    ARTIFACT_MODEL_DIR,
+    ARTIFACT_MODEL_PREFIX,
+    ARTIFACT_METRICS_DIR,
+    ARTIFACT_FEATURES_DIR,
+    ARTIFACT_METRICS_PREFIX,
+    ARTIFACT_FEATURES_PREFIX
 )
 from aws_cloud.s3_utils import file_hash
 from aws_cloud.manifest import save_manifest, load_manifest
@@ -17,7 +23,10 @@ from aws_cloud.upload import upload_file
 FOLDERS = [(RAW_DIR, RAW_PREFIX),
            (PROCESSED_DIR, PROCESSED_PREFIX),
            (FEATURE_DIR, FEATURE_PREFIX),
-           (MODEL_INPUT_DIR, MODEL_INPUT_PREFIX)]
+           (MODEL_INPUT_DIR, MODEL_INPUT_PREFIX),
+           (ARTIFACT_MODEL_DIR, ARTIFACT_MODEL_PREFIX),
+           (ARTIFACT_METRICS_DIR, ARTIFACT_METRICS_PREFIX),
+           (ARTIFACT_FEATURES_DIR, ARTIFACT_FEATURES_PREFIX)]
 
 manifest = load_manifest()
 
