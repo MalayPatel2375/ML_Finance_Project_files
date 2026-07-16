@@ -1,10 +1,19 @@
+from dotenv import load_dotenv
+import os
+
 """
 Project Configuration
 """
 
-MODEL_NAME = "Financial XGBoost"
+load_dotenv()
 
-MODEL_VERSION = "v1"
+AWS_REGION = os.getenv("AWS_REGION")
+
+S3_BUCKET = os.getenv("S3_BUCKET")
+
+MODEL_VERSION = os.getenv("MODEL_VERSION", "v1")
+
+MODEL_NAME = "Financial XGBoost"
 
 AUTHOR = "Malay Patel"
 

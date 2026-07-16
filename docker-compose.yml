@@ -1,0 +1,12 @@
+services:
+
+  financial-api:
+
+    build: .
+
+    container_name: financial-api
+
+    ports:
+      - "8000:8000"
+
+    restart: unless-stopped

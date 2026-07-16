@@ -4026,3 +4026,90 @@ Improved project maintainability by introducing:
 The project evolved from a local machine learning experiment into a cloud-enabled, modular machine learning system capable of training, storing, loading, validating, and managing models using AWS services.
 
 This week established the foundation for model deployment and scalable machine learning workflows planned for Week 8.
+
+# Week 8 - Day 1
+## Building a Production-Ready Prediction API
+
+### Overview
+
+Week 8 marks the transition from machine learning development to model deployment.
+
+The objective of Day 1 was to expose the trained XGBoost model through a REST API using FastAPI while reusing the inference pipeline developed in Week 7.
+
+---
+
+## Work Completed
+
+### FastAPI Setup
+
+Created a production-ready FastAPI application with:
+
+- Automatic OpenAPI documentation
+- Swagger UI
+- Interactive endpoint testing
+
+---
+
+### API Architecture
+
+Designed a modular API structure:
+
+- app.py
+- routes.py
+- services.py
+- schemas.py
+
+This separates HTTP routing, business logic, and request validation.
+
+---
+
+### Prediction Endpoint
+
+Implemented:
+
+POST /api/v1/predict
+
+The endpoint:
+
+- validates incoming requests
+- loads the trained model
+- loads the fitted scaler
+- performs inference
+- returns prediction probability and confidence
+
+---
+
+### Health Check
+
+Implemented:
+
+GET /api/v1/health
+
+Used for monitoring deployment status.
+
+---
+
+### Response Validation
+
+Added Pydantic request and response models to ensure:
+
+- input validation
+- consistent API responses
+- automatic documentation
+
+---
+
+## Skills Practiced
+
+- FastAPI
+- REST API Design
+- Pydantic
+- Service Layer Architecture
+- Machine Learning Deployment
+- Production API Design
+
+---
+
+## Outcome
+
+Successfully transformed the Financial Machine Learning project into a production-ready inference service capable of serving predictions through HTTP endpoints.
